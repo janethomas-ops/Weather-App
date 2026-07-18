@@ -1,0 +1,6 @@
+{
+  "name": "Weather Intelligence",
+  "description": "An AI-powered weather forecasting and daily planning intelligence app connecting to geocoding and forecasting services.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
