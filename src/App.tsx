@@ -95,7 +95,7 @@ export default function App() {
     fetchWeather(PRESET_CITIES[1].lat, PRESET_CITIES[1].lon, "London, United Kingdom");
   }, []);
 
-  // Handle city search autocomplete
+  // Handle city search autocomplete (UPDATED: Using Direct Geocoding URL)
   const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setSearchQuery(val);
@@ -109,7 +109,7 @@ export default function App() {
     setIsSearching(true);
     try {
       const response = await fetch(
-        `/api/weather/search?name=${encodeURIComponent(val)}`
+        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(val)}&count=5&language=en&format=json`
       );
       if (!response.ok) throw new Error("Failed to search locations");
       const data = await response.json();
@@ -135,7 +135,7 @@ export default function App() {
     return Math.round(celsius) + "°C";
   };
 
-  // Fetch full weather metrics from Open-Meteo APIs
+  // Fetch full weather metrics from Open-Meteo APIs (UPDATED: Using Direct Forecast URL)
   const fetchWeather = async (lat: number, lon: number, cityName: string) => {
     setIsLoadingWeather(true);
     setWeatherError(null);
@@ -143,7 +143,7 @@ export default function App() {
     setSelectedDayIndex(0);
 
     try {
-      const weatherUrl = `/api/weather/forecast?latitude=${lat}&longitude=${lon}`;
+      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code,precipitation,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability,precipitation_sum&timezone=auto`;
       const response = await fetch(weatherUrl);
 
       if (!response.ok) {
@@ -180,7 +180,7 @@ export default function App() {
       };
 
       setWeatherData(parsedWeatherData);
-      // Immediately request Gemini recommendation
+      // Immediately request recommendation
       fetchAIRecommendation(parsedWeatherData);
     } catch (err: any) {
       setWeatherError(err.message || "An unexpected error occurred while fetching the weather forecast.");
@@ -408,7 +408,7 @@ Outdoor Suitability: ${recommendation.outdoorSuitability.status} (${recommendati
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-            </span>
+            </span >
             <span>API Online</span>
           </div>
         </div>
@@ -423,7 +423,7 @@ Outdoor Suitability: ${recommendation.outdoorSuitability.status} (${recommendati
           <button
             key={city.name}
             onClick={() => fetchWeather(city.lat, city.lon, `${city.name}, ${city.country}`)}
-            className="px-3.5 py-1 text-xs font-medium bg-slate-900/60 border border-slate-800/80 hover:border-sky-500/30 rounded-full text-slate-300 hover:bg-slate-800 transition-all whitespace-nowrap"
+            className="px-3.5 py-1 text-xs font-medium bg-slate-900/60 border border-slate-880/80 hover:border-sky-500/30 rounded-full text-slate-300 hover:bg-slate-800 transition-all whitespace-nowrap"
           >
             {city.name}
           </button>
@@ -469,7 +469,7 @@ Outdoor Suitability: ${recommendation.outdoorSuitability.status} (${recommendati
               <div
                 className={`relative bg-gradient-to-br ${
                   currentDetails?.bgClass || "from-sky-600 to-blue-700"
-                } rounded-3xl p-8 text-white shadow-2xl shadow-sky-950/20 overflow-hidden group border border-white/5`}
+                } rounded-3xl p-8 text-white shadow-2xl shadow-sky-955/20 overflow-hidden group border border-white/5`}
               >
                 {/* Background overlay icon */}
                 <div className="absolute -right-8 -bottom-8 w-44 h-44 opacity-15 text-white transition-transform duration-700 group-hover:scale-110">
